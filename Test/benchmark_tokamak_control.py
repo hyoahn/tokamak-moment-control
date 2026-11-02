@@ -1,7 +1,7 @@
 """
 Dedicated Verification & Disruption-Prevention Benchmark for Tokamak Fusion Control
 ===================================================================================
-Author & Discoverer: Dr. Hyo E. Ahn (Independent Researcher, ahn@aya.yale.edu)
+Author & Discoverer: Dr. Hyo Eun Ahn (Independent Researcher, ahn@aya.yale.edu)
 Companion Benchmark for Paper 1:
   "Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation
    via Moment-Space Dimension Reduction" (doc/arXiv/tokamak_moment_control.tex)
@@ -90,7 +90,7 @@ def run_tokamak_benchmark(
 ) -> dict:
     print("=" * 78)
     print("  TOKAMAK FUSION VERIFICATION SUITE: MOMENT EQUILIBRIUM & CERTIFIED LMI")
-    print("  Companion to: doc/arXiv/tokamak_moment_control.tex (Dr. Hyo E. Ahn)")
+    print("  Companion to: doc/arXiv/tokamak_moment_control.tex (Dr. Hyo Eun Ahn)")
     print("=" * 78)
 
     mesh = generate_tokamak_plasma_mesh(spec)

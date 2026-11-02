@@ -1,6 +1,6 @@
 # Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation via Moment-Space Dimension Reduction
 
-**Author & Originator:** Dr. Hyo E. Ahn (*Independent Researcher*, `ahn@aya.yale.edu`)  
+**Author & Originator:** Dr. Hyo Eun Ahn (*Independent Researcher*, `ahn@aya.yale.edu`)  
 **Companion Software Repository for arXiv Preprint:**  
 > H. E. Ahn, *"Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation via Moment-Space Dimension Reduction"* (2026).
 
@@ -10,7 +10,7 @@
 
 Real-time magnetic equilibrium reconstruction and active disruption prevention in tokamaks (**KSTAR**, **ITER**, **JET**, **SPARC**) require feedback control latencies below $10\ \mu\text{s}$ to suppress vertical displacement events (VDEs) and resistive wall modes (RWMs). Conventional Grad-Shafranov solvers and Particle-in-Cell (PIC) codes scale as $O(N^2)$ over $N \ge 10^3 - 10^6$ spatial grid nodes, preventing deterministic microsecond feedback.
 
-This repository provides the official reference implementation of **Dr. Hyo E. Ahn's Moment-Space Dimension Reduction and Certified LMI Control Engine**, which algebraically eliminates the spatial grid dimension $N$ from the real-time execution loop ($N \to M = 35$ fourth-order 3D polynomial moments):
+This repository provides the official reference implementation of **Dr. Hyo Eun Ahn's Moment-Space Dimension Reduction and Certified LMI Control Engine**, which algebraically eliminates the spatial grid dimension $N$ from the real-time execution loop ($N \to M = 35$ fourth-order 3D polynomial moments):
 
 ### Key Equations Implemented
 
@@ -84,5 +84,5 @@ python3 Test/benchmark_tokamak_control.py
 ```
 
 ## 5. License & Priority Notice
-Copyright (c) 2026 Dr. Hyo E. Ahn (`ahn@aya.yale.edu`). All rights reserved. Originated from the author's 1994 unpublished mathematical derivations on closed-form moment-space dimension reduction.
+Copyright (c) 2026 Dr. Hyo Eun Ahn (`ahn@aya.yale.edu`). All rights reserved. Originated from the author's 1994 unpublished mathematical derivations on closed-form moment-space dimension reduction.
 

@@ -1,7 +1,7 @@
 """
 Tokamak Plasma Equilibrium Reconstruction & Certified LMI Disruption Control Engine
 ===================================================================================
-Originator & Author: Dr. Hyo E. Ahn (Independent Researcher, ahn@aya.yale.edu)
+Originator & Author: Dr. Hyo Eun Ahn (Independent Researcher, ahn@aya.yale.edu)
 Companion Code for Paper 1:
   "Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation
    via Moment-Space Dimension Reduction" (doc/arXiv/tokamak_moment_control.tex)
