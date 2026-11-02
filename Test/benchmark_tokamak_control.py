@@ -206,14 +206,19 @@ def run_tokamak_benchmark(
     bars = axes[1].bar(methods, times, color=colors, width=0.45)
     axes[1].set_yscale("log")
     axes[1].set_title("Tokamak Real-Time Control Latency (Log Scale)", fontsize=12, fontweight="bold")
-    axes[1].set_ylabel("Execution Time (microseconds)", fontsize=11)
-    axes[1].axhline(y=deadline_us, color="red", linestyle=":", label=f"KSTAR/ITER Limit ({deadline_us:.0f} µs)")
+    axes[1].set_ylabel(r"Execution Time ($\mu\mathrm{s}$)", fontsize=11)
+    axes[1].axhline(
+        y=deadline_us,
+        color="red",
+        linestyle=":",
+        label=rf"KSTAR/ITER Limit ({deadline_us:.0f} $\mu\mathrm{{s}}$)",
+    )
     for bar in bars:
         yval = bar.get_height()
         axes[1].text(
             bar.get_x() + bar.get_width() / 2.0,
             yval * 0.65 if yval > 100 else yval * 1.25,
-            f"{yval:.2f} µs",
+            rf"{yval:.2f} $\mu\mathrm{{s}}$",
             ha="center",
             va="bottom",
             fontweight="bold",
