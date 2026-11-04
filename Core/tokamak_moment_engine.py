@@ -1,10 +1,12 @@
 """
+tokamak_moment_engine.py
+------------------------
 Tokamak Plasma Equilibrium Reconstruction & Certified LMI Disruption Control Engine
 ===================================================================================
 Originator & Author: Dr. Hyo Eun Ahn (Independent Researcher, hyo.eun.ahn@proton.me)
 Companion Code for Paper 1:
   "Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation
-   via Moment-Space Dimension Reduction" (doc/arXiv/tokamak_moment_control.tex)
+   via Moment-Space Dimension Reduction" (tokamak_moment_control.tex)
 Architecture: Domain-Driven Design (DDD) & Zero Hard-Coding (GR2 Compliant)
 
 Key Mathematical Formulations for Tokamak Fusion Control (KSTAR / ITER):

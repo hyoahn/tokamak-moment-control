@@ -1,10 +1,12 @@
 """
+benchmark_tokamak_control.py
+----------------------------
 Dedicated Verification & Disruption-Prevention Benchmark for Tokamak Fusion Control
 ===================================================================================
 Author & Discoverer: Dr. Hyo Eun Ahn (Independent Researcher, hyo.eun.ahn@proton.me)
 Companion Benchmark for Paper 1:
   "Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation
-   via Moment-Space Dimension Reduction" (doc/arXiv/tokamak_moment_control.tex)
+   via Moment-Space Dimension Reduction" (tokamak_moment_control.tex)
 Architecture: Domain-Driven Design (DDD) & Zero Hard-Coding (GR2 Compliant)
 
 Verifies:
@@ -25,11 +27,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+CURRENT_DIR = Path(__file__).resolve().parent
+if str(CURRENT_DIR) not in sys.path:
+    sys.path.insert(0, str(CURRENT_DIR))
 
-from Core.tokamak_moment_engine import (
+from tokamak_moment_engine import (
     TokamakEquilibriumMomentControlEngine,
     TokamakMomentConfig,
 )
@@ -49,7 +51,7 @@ class TokamakBenchmarkSpec:
     direct_grid_sample_runs: int = 50
     numerical_tolerance: float = 1e-10
     figure_dpi: int = 200
-    output_figure_relpath: str = "Assets/benchmark_tokamak.png"
+    output_figure_relpath: str = "benchmark_tokamak.png"
 
 
 def generate_tokamak_plasma_mesh(spec: TokamakBenchmarkSpec) -> np.ndarray:
@@ -90,7 +92,7 @@ def run_tokamak_benchmark(
 ) -> dict:
     print("=" * 78)
     print("  TOKAMAK FUSION VERIFICATION SUITE: MOMENT EQUILIBRIUM & CERTIFIED LMI")
-    print("  Companion to: doc/arXiv/tokamak_moment_control.tex (Dr. Hyo Eun Ahn)")
+    print("  Companion to: tokamak_moment_control.tex (Dr. Hyo Eun Ahn)")
     print("=" * 78)
 
     mesh = generate_tokamak_plasma_mesh(spec)
@@ -183,7 +185,7 @@ def run_tokamak_benchmark(
         _ = engine.D @ j_recon
     t_direct_us = ((time.perf_counter() - t_dir0) / spec.direct_grid_sample_runs) * 1e6
 
-    out_path = PROJECT_ROOT / spec.output_figure_relpath
+    out_path = CURRENT_DIR / spec.output_figure_relpath
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
