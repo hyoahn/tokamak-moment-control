@@ -137,48 +137,48 @@ In the real-time control system, evaluating Eq.~\eqref{eq:green_flux} over $N$ p
 \end{equation}
 where $\bm{v} = [v_1, \dots, v_M]^T \in \mathbb{R}^M$ is the coefficient vector to be determined.
 
-To maximize fitting accuracy in the hot plasma core while suppressing edge noise, we formulate a current-weighted least-squares problem across the mesh points:
+To eliminate the mesh dimension $N$ from online computation, we adopt the fixed reference prior $\bm{\mu}$ as the polynomial fitting weight and formulate:
 \begin{equation}
-    \mathcal{E}(\bm{v}) = \sum_{i=1}^N a_i \left[ \psi_{\mathrm{exact}}(\bm{r}_i) - \psi_{\mathrm{approx}}(\bm{r}_i) \right]^2.
-    \label{eq:weighted_lsq}
+    \mathcal{E}_\mu(\bm{v}) = \sum_{i=1}^N \mu_i \left[ \psi_{\mathrm{exact}}(\bm{r}_i) - \psi_{\mathrm{approx}}(\bm{r}_i) \right]^2.
+    \label{eq:weighted_lsq_mu}
 \end{equation}
 
-\begin{theorem}[Dimension Collapse Theorem (The Fall-out of $N$)]
-The polynomial coefficient vector $\bm{v}$ minimizing $\mathcal{E}(\bm{v})$ satisfies:
+\begin{theorem}[Fixed-Prior Dimension Collapse Theorem (The Fall-out of $N$)]
+The polynomial coefficient vector $\bm{v}$ minimizing $\mathcal{E}_\mu(\bm{v})$ satisfies:
 \begin{equation}
     \bm{v} = \bm{\Lambda}^{\prime T} \bm{D} \bm{\Lambda} \bm{s} + \bm{\Lambda}^{\prime T} \bm{D} \bm{c},
     \label{eq:magic_matrix}
 \end{equation}
 where $\bm{D} \in \mathbb{R}^{N \times N}$ is the precomputed Green kernel matrix with $D_{ij} = G(\bm{r}_i, \bm{r}_j)$ ($D_{ii} = 0$), $\bm{c} = [\bm{I} - \bm{\Lambda}\bm{\Omega}]\bm{\mu}$, and:
 \begin{equation}
-    \bm{\Lambda}^{\prime} = \bigl\{\bm{\Omega}\bm{a}\bigr\}^T \Bigl[ \bm{\Omega} \bigl\{\bm{\Omega}\bm{a}\bigr\}^T \Bigr]^{-1}, \quad \{\bm{\Omega}\bm{a}\}_{kj} = \Omega_{kj} a_j.
+    \bm{\Lambda}^{\prime} \equiv \bm{\Lambda}^{\prime}\big|_{\bm{a}=\bm{\mu}} = \bigl\{\bm{\Omega}\bm{\mu}\bigr\}^T \Bigl[ \bm{\Omega} \bigl\{\bm{\Omega}\bm{\mu}\bigr\}^T \Bigr]^{-1}, \quad \{\bm{\Omega}\bm{\mu}\}_{kj} = \Omega_{kj} \mu_j.
     \label{eq:lambda_prime}
 \end{equation}
 Crucially, the high dimension $N$ is completely eliminated offline, reducing online calculation to an $M \times M$ matrix multiplication.
 \end{theorem}
 
 \noindent\textit{Remark (Fixed-Prior Linearization and Surrogate Kernel).}
-In the precomputed online operator, $\bm{\Lambda}^{\prime}$ is evaluated at the reference prior $\bm{a} = \bm{\mu}$, yielding a fixed operator $\mathcal{M} = \bm{\Lambda}^{\prime T} \bm{D} \bm{\Lambda}|_{\bm{a}=\bm{\mu}}$ that is an algebraically exact dimension reduction within the fixed-prior linearization. The state-dependent formulation in this theorem represents the exact $\bm{a}$-weighted projection when $\bm{a}$ is the actual current distribution, which requires recomputing $\bm{\Lambda}^{\prime}$ at each time step and is not the runtime path. The numerical benchmarks in Section~5 employ a regularized $1/r$ surrogate interaction kernel to demonstrate the dimensional collapse mechanism; device-specific complete elliptic-integral Green's functions are a direct substitution for machine-specific implementation.
+In the precomputed online operator, $\bm{\Lambda}^{\prime}$ is evaluated at the reference prior $\bm{a} = \bm{\mu}$, yielding a fixed operator $\mathcal{M} = \bm{\Lambda}^{\prime T} \bm{D} \bm{\Lambda}|_{\bm{a}=\bm{\mu}}$ that is an algebraically exact dimension reduction within the fixed-prior linearization. The separate $\bm{a}$-weighted Exact Moment Conservation property (Theorem~3) holds independently for the actual current distribution $\bm{a}$ and does not enter the runtime flux reconstruction path. The numerical benchmarks in Section~5 employ a regularized $1/r$ surrogate interaction kernel to demonstrate the dimensional collapse mechanism; device-specific complete elliptic-integral Green's functions are a direct substitution for machine-specific implementation.
 
 \begin{proof}
-Differentiating Eq.~\eqref{eq:weighted_lsq} with respect to $v_k$ ($k=1,\dots,M$):
+Differentiating Eq.~\eqref{eq:weighted_lsq_mu} with respect to $v_k$ ($k=1,\dots,M$):
 \begin{equation}
-    \frac{\partial \mathcal{E}}{\partial v_k} = -2 \sum_{i=1}^N a_i \left[ \psi_{\mathrm{exact}}(\bm{r}_i) - \sum_{l=1}^M v_l m_l(\bm{r}_i) \right] m_k(\bm{r}_i) = 0.
+    \frac{\partial \mathcal{E}_\mu}{\partial v_k} = -2 \sum_{i=1}^N \mu_i \left[ \psi_{\mathrm{exact}}(\bm{r}_i) - \sum_{l=1}^M v_l m_l(\bm{r}_i) \right] m_k(\bm{r}_i) = 0.
 \end{equation}
-In matrix notation, noting that $m_k(\bm{r}_i) = \Omega_{ki}$ and defining the element-wise scaled matrix $\{\bm{\Omega}\bm{a}\}_{ki} = \Omega_{ki} a_i$:
+In matrix notation, noting that $m_k(\bm{r}_i) = \Omega_{ki}$ and defining the element-wise scaled matrix $\{\bm{\Omega}\bm{\mu}\}_{ki} = \Omega_{ki} \mu_i$:
 \begin{equation}
-    \{\bm{\Omega}\bm{a}\} \bm{\Omega}^T \bm{v} = \{\bm{\Omega}\bm{a}\} \bm{\psi}_{\mathrm{exact}}.
+    \{\bm{\Omega}\bm{\mu}\} \bm{\Omega}^T \bm{v} = \{\bm{\Omega}\bm{\mu}\} \bm{\psi}_{\mathrm{exact}}.
     \label{eq:normal}
 \end{equation}
 Inverting the $M \times M$ matrix on the left-hand side yields:
 \begin{equation}
-    \bm{v} = \left[ \{\bm{\Omega}\bm{a}\} \bm{\Omega}^T \right]^{-1} \{\bm{\Omega}\bm{a}\} \bm{\psi}_{\mathrm{exact}} \equiv \bm{\Lambda}^{\prime T} \bm{\psi}_{\mathrm{exact}}.
+    \bm{v} = \left[ \{\bm{\Omega}\bm{\mu}\} \bm{\Omega}^T \right]^{-1} \{\bm{\Omega}\bm{\mu}\} \bm{\psi}_{\mathrm{exact}} \equiv \bm{\Lambda}^{\prime T} \bm{\psi}_{\mathrm{exact}}.
 \end{equation}
 Substituting $\bm{\psi}_{\mathrm{exact}} = \bm{D} \bm{a}$ and the expression for current distribution $\bm{a} = \bm{\Lambda}\bm{s} + \bm{c}$ directly yields Eq.~\eqref{eq:magic_matrix}.
 \end{proof}
 
 \begin{theorem}[Exact Moment Conservation]
-Under the current-weighted projection~\eqref{eq:weighted_lsq}, the spatial moments of the approximated flux potential exactly equal the moments of the exact flux potential:
+Under the current-weighted least-squares projection with weights $a_i$, the spatial moments of the approximated flux potential exactly equal the moments of the exact flux potential:
 \begin{equation}
     \langle m_k \psi_{\mathrm{approx}} \rangle_{\bm{a}} = \langle m_k \psi_{\mathrm{exact}} \rangle_{\bm{a}}, \quad \forall k = 1, \dots, M,
     \label{eq:moment_conservation}
@@ -191,7 +191,7 @@ Expanding the left-hand side of Eq.~\eqref{eq:moment_conservation}:
 \begin{equation}
     \langle m_k \psi_{\mathrm{approx}} \rangle_{\bm{a}} = \sum_{i=1}^N a_i m_k(\bm{r}_i) \sum_{l=1}^M v_l m_l(\bm{r}_i) = \left[ \{\bm{\Omega}\bm{a}\} \bm{\Omega}^T \bm{v} \right]_k.
 \end{equation}
-From the normal equation~\eqref{eq:normal}, this identically equals $[\{\bm{\Omega}\bm{a}\} \bm{\psi}_{\mathrm{exact}}]_k = \langle m_k \psi_{\mathrm{exact}} \rangle_{\bm{a}}$, completing the proof.
+The $\bm{a}$-weighted optimality condition gives the normal equation $\{\bm{\Omega}\bm{a}\}\bm{\Omega}^T\bm{v} = \{\bm{\Omega}\bm{a}\}\bm{\psi}_{\mathrm{exact}}$. Hence the bracket above identically equals $[\{\bm{\Omega}\bm{a}\} \bm{\psi}_{\mathrm{exact}}]_k = \langle m_k \psi_{\mathrm{exact}} \rangle_{\bm{a}}$, completing the proof.
 \end{proof}
 
 ---
@@ -241,9 +241,9 @@ This LMI-based stability formulation is examined here as an illustrative closed-
 
 ---
 
-\section{Numerical Benchmarks on KSTAR Geometry}
+\section{Numerical Benchmarks of the Reduced-Order Surrogate Model}
 
-To validate the theoretical framework, we implemented the moment reduction solver in Python/\allowbreak NumPy (with vectorized BLAS/LAPACK kernels) and simulated typical KSTAR divertor configurations (major radius $R_0 = 1.8\,\mathrm{m}$, minor radius $a = 0.5\,\mathrm{m}$, elongation $\kappa = 1.8$, triangularity $\delta = 0.4$, plasma current $I_p = 1.0\,\mathrm{MA}$, toroidal field $B_0 = 3.0\,\mathrm{T}$).
+To validate the theoretical framework, we implemented the moment reduction solver in Python/\allowbreak NumPy (with vectorized BLAS/LAPACK kernels). The test mesh is a unit sphere discretized with $N=1{,}000$ nodes; plasma parameters representative of KSTAR divertor configurations (major radius $R_0 = 1.8\,\mathrm{m}$, minor radius $a = 0.5\,\mathrm{m}$, elongation $\kappa = 1.8$, triangularity $\delta = 0.4$, plasma current $I_p = 1.0\,\mathrm{MA}$, toroidal field $B_0 = 3.0\,\mathrm{T}$) inform the surrogate model parameters, but no actual KSTAR geometry or experimental data are used.
 
 \begin{figure}[htbp]
     \centering
@@ -269,7 +269,7 @@ Real-Time rtEFIT$^\dagger$ & \texttt{33x33} & Linearized Multi-grid & $0.85\;\ma
 GPU-Accelerated P-EFIT$^\dagger$ & \texttt{65x65} & Parallel Matrix Solver & $0.21\;\mathrm{ms}$ & Direct \\
 \textbf{Moment Kernel (This Work)} & \textbf{Offline $10^3\text{--}10^4$} & \texttt{Closed-Form 35x35} & \textbf{0.0043\;ms (4.29\,$\bm{\mu}$s)} & \textbf{None (Deterministic)} \\
 \bottomrule
-\multicolumn{5}{l}{\footnotesize $^\dagger$Reference values from published literature~\cite{lao1985reconstruction}; not measured in this work.}
+\multicolumn{5}{l}{\footnotesize $^\dagger$Literature-reported operational latency ranges for standard Grad-Shafranov reconstruction methods; not benchmarked in this testbed.}
 \end{tabular}%
 }
 \end{table}
