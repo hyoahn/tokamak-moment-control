@@ -235,7 +235,7 @@ def run_tokamak_benchmark(
     plt.close()
     print(f"\n[6] Saved Tokamak benchmark figure to: {out_path}")
     print("=" * 78)
-    print("  TOKAMAK SUITE PASSED 100%: ZERO DISRUPTION & SUB-5 MICROSECOND CONTROL!")
+    print("  TOKAMAK SUITE PASSED 100%: ZERO DISRUPTION & MICROSECOND-SCALE REDUCED-ORDER CONTROL!")
     print("=" * 78)
 
     return {
