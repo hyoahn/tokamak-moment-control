@@ -1,6 +1,6 @@
 # Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation via Moment-Space Dimension Reduction
 
-**Author & Originator:** Dr. Hyo Eun Ahn (*Independent Researcher*, `ahn@aya.yale.edu`)  
+**Author & Originator:** Dr. Hyo Eun Ahn (*Independent Researcher*, `hyo.eun.ahn@proton.me`)  
 **Companion Software Repository for arXiv Preprint:**  
 > H. E. Ahn, *"Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation via Moment-Space Dimension Reduction"* (2026).
 
@@ -84,5 +84,5 @@ python3 Test/benchmark_tokamak_control.py
 ```
 
 ## 5. License & Priority Notice
-Copyright (c) 2026 Dr. Hyo Eun Ahn (`ahn@aya.yale.edu`). All rights reserved. Originated from the author's 1994 unpublished mathematical derivations on closed-form moment-space dimension reduction.
+Copyright (c) 2026 Dr. Hyo Eun Ahn (`hyo.eun.ahn@proton.me`). All rights reserved. Originated from the author's 1994 unpublished mathematical derivations on closed-form moment-space dimension reduction.
 

@@ -1,7 +1,7 @@
 """
 Dedicated Verification & Disruption-Prevention Benchmark for Tokamak Fusion Control
 ===================================================================================
-Author & Discoverer: Dr. Hyo Eun Ahn (Independent Researcher, ahn@aya.yale.edu)
+Author & Discoverer: Dr. Hyo Eun Ahn (Independent Researcher, hyo.eun.ahn@proton.me)
 Companion Benchmark for Paper 1:
   "Real-Time Tokamak Plasma Equilibrium Reconstruction and Disruption Mitigation
    via Moment-Space Dimension Reduction" (doc/arXiv/tokamak_moment_control.tex)
