@@ -233,7 +233,7 @@ subject to the geometric wall clearance constraints:
         \bm{Q} \bm{c}_j & \bm{Q}
     \end{bmatrix} \ge 0, \quad \forall j = 1, \dots, N_{\mathrm{limiter}},
 \end{equation}
-then the closed-loop feedback gain $\bm{K} = \bm{Y} \bm{Q}^{-1}$ certifies that for all bounded disturbances, the plasma state remains within the invariant ellipsoid $\mathcal{E}_P$ under the idealized linear model.
+then the closed-loop feedback gain $\bm{K} = \bm{Y} \bm{Q}^{-1}$ certifies that for any initial condition satisfying $\bm{x}(0) \in \mathcal{E}_P$ and all bounded disturbances, the plasma state remains within the invariant ellipsoid $\mathcal{E}_P$ under the idealized linear model.
 \end{theorem}
 
 \noindent\textit{Remark (Illustrative Linear Surrogate).}
@@ -248,7 +248,7 @@ To validate the theoretical framework, we implemented the moment reduction solve
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.98\textwidth]{benchmark_tokamak.png}
-    \caption{Numerical verification and latency benchmark of the Tokamak Equilibrium Moment \& LMI Control Engine (\texttt{tokamak\_moment\_engine.py}). \textit{Left}: Monotonic decay of the quadratic Lyapunov energy $V(\bm{x}) = \bm{x}^T \bm{P} \bm{x}$ under LMI feedback (${\approx}96.0\%$ suppression within the Robust Positively Invariant ellipsoid $V(\bm{x}) \le 1$) in the illustrative 6-state linear surrogate, compared against uncontrolled VDE/RWM growth. \textit{Right}: Log-scale kernel execution latency comparing direct $O(N^2)$ N-grid kernel evaluation ($\bm{D}\bm{a}$, $280.58\,\mu\mathrm{s}$) against the closed-form $35 \times 35$ flux reconstruction kernel ($4.29\,\mu\mathrm{s}$) and full LMI coil feedback kernel ($9.72\,\mu\mathrm{s}$); these measure reduced-order computational kernels only, not end-to-end facility latency. The direct grid baseline ($280.58\,\mu\mathrm{s}$) reflects direct pairwise Green-kernel evaluation $\bm{D}\bm{a}$ across the $N=1{,}000$ mesh nodes.}
+    \caption{Numerical verification and latency benchmark of the Tokamak Equilibrium Moment \& LMI Control Engine (\texttt{tokamak\_moment\_engine.py}). \textit{Left}: Monotonic decay of the quadratic Lyapunov energy $V(\bm{x}) = \bm{x}^T \bm{P} \bm{x}$ under LMI feedback (${\approx}96.0\%$ suppression within the Robust Positively Invariant ellipsoid $V(\bm{x}) \le 1$) in the illustrative 6-state linear surrogate, compared against uncontrolled VDE/RWM growth. \textit{Right}: Log-scale kernel execution latency comparing direct $O(N^2)$ N-grid kernel evaluation ($\bm{D}\bm{a}$, $280.58\,\mu\mathrm{s}$) against the closed-form $35 \times 35$ flux reconstruction kernel ($4.29\,\mu\mathrm{s}$) and full LMI coil feedback kernel ($9.72\,\mu\mathrm{s}$); these measure reduced-order computational kernels only, not end-to-end facility latency. The direct grid baseline ($280.58\,\mu\mathrm{s}$) reflects precomputed $N \times N$ Green-kernel matrix-vector multiplication $\bm{D}\bm{a}$ across the $N=1{,}000$ mesh nodes.}
     \label{fig:benchmark}
 \end{figure}
 
@@ -264,7 +264,7 @@ In our reference verification suite ($N = 1,000$ spatial nodes mapped to $M = 35
 \toprule
 \textbf{Method} & \textbf{Grid Size} & \textbf{Computational Complexity} & \textbf{Kernel Latency} \\
 \midrule
-Direct N-Grid Kernel & $N=1{,}000$ & $\mathcal{O}(N^2)$ Pairwise Green-kernel & $280.58\;\mu\mathrm{s}$ \\
+Direct N-Grid Kernel & $N=1{,}000$ & $\mathcal{O}(N^2)$ Matrix-Vector ($N \times N$) & $280.58\;\mu\mathrm{s}$ \\
 \textbf{Moment Kernel (This Work)} & $N=1{,}000 \to M=35$ & $\mathcal{O}(M^2)$ Matrix-Vector ($35\times35$) & $\mathbf{4.29\;\mu\mathrm{s}}$ \\
 Full LMI Coil Feedback & 6-state & Closed-Form Linear Matrix Operator & $9.72\;\mu\mathrm{s}$ \\
 \bottomrule
