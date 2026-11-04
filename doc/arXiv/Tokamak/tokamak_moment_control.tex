@@ -248,28 +248,27 @@ To validate the theoretical framework, we implemented the moment reduction solve
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.98\textwidth]{benchmark_tokamak.png}
-    \caption{Numerical verification and latency benchmark of the Tokamak Equilibrium Moment \& LMI Control Engine (\texttt{tokamak\_moment\_engine.py}). \textit{Left}: Monotonic decay of the quadratic Lyapunov energy $V(\bm{x}) = \bm{x}^T \bm{P} \bm{x}$ under LMI feedback ($99.6\%$ suppression within the Robust Positively Invariant ellipsoid $V(\bm{x}) \le 1$) in the illustrative 6-state linear surrogate, compared against uncontrolled VDE/RWM growth. \textit{Right}: Log-scale kernel execution latency comparing direct $O(N^2)$ N-grid kernel evaluation ($\bm{D}\bm{a}$, $280.58\,\mu\mathrm{s}$) against the closed-form $35 \times 35$ flux reconstruction kernel ($4.29\,\mu\mathrm{s}$) and full LMI coil feedback kernel ($9.72\,\mu\mathrm{s}$); these measure reduced-order computational kernels only, not end-to-end facility latency.}
+    \caption{Numerical verification and latency benchmark of the Tokamak Equilibrium Moment \& LMI Control Engine (\texttt{tokamak\_moment\_engine.py}). \textit{Left}: Monotonic decay of the quadratic Lyapunov energy $V(\bm{x}) = \bm{x}^T \bm{P} \bm{x}$ under LMI feedback ($99.6\%$ suppression within the Robust Positively Invariant ellipsoid $V(\bm{x}) \le 1$) in the illustrative 6-state linear surrogate, compared against uncontrolled VDE/RWM growth. \textit{Right}: Log-scale kernel execution latency comparing direct $O(N^2)$ N-grid kernel evaluation ($\bm{D}\bm{a}$, $280.58\,\mu\mathrm{s}$) against the closed-form $35 \times 35$ flux reconstruction kernel ($4.29\,\mu\mathrm{s}$) and full LMI coil feedback kernel ($9.72\,\mu\mathrm{s}$); these measure reduced-order computational kernels only, not end-to-end facility latency. The direct grid baseline ($280.58\,\mu\mathrm{s}$) reflects direct pairwise Green-kernel evaluation $\bm{D}\bm{a}$ across the $N=1{,}000$ mesh nodes.}
     \label{fig:benchmark}
 \end{figure}
 
 \subsection{Numerical Exactness and Latency Throughput}
-In our reference verification suite ($N = 1,000$ spatial nodes mapped to $M = 35$ fourth-order basis polynomials), the reconstructed plasma current profile satisfies the Exact Moment Conservation Theorem to machine precision ($\|\bm{\Omega}\bm{a} - \bm{s}\|_\infty = 4.44 \times 10^{-16}$). The precomputed $35 \times 35$ fixed-prior operator $\bm{v} = \bm{K}\bm{s} + \bm{v}_0$ reproduces the full $N$-grid reference projection with a maximum residual $\|\bm{v}_{\mathrm{closed}} - \bm{v}_{\mathrm{full}}\|_\infty = 4.77 \times 10^{-15}$. Separately, evaluating the state-dependent $\bm{a}$-weighted projection of Theorem~3 confirms exact preservation of all $35$ poloidal flux moment averages to machine precision ($\|\langle m_k \psi^{\mathrm{approx}}\rangle_{\bm{a}} - \langle m_k \psi^{\mathrm{exact}}\rangle_{\bm{a}}\|_\infty = 8.33 \times 10^{-17}$). Table~\ref{tab:latency_benchmark} compares the computational performance of our closed-form moment approach with state-of-the-art EFIT-based solvers.
+In our reference verification suite ($N = 1,000$ spatial nodes mapped to $M = 35$ fourth-order basis polynomials), the reconstructed plasma current profile satisfies the Exact Moment Conservation Theorem to machine precision ($\|\bm{\Omega}\bm{a} - \bm{s}\|_\infty = 4.44 \times 10^{-16}$). The precomputed $35 \times 35$ fixed-prior operator $\bm{v} = \bm{K}\bm{s} + \bm{v}_0$ reproduces the full $N$-grid reference projection with a maximum residual $\|\bm{v}_{\mathrm{closed}} - \bm{v}_{\mathrm{full}}\|_\infty = 4.77 \times 10^{-15}$. Separately, evaluating the state-dependent $\bm{a}$-weighted projection of Theorem~3 confirms exact preservation of all $35$ poloidal flux moment averages to machine precision ($\|\langle m_k \psi^{\mathrm{approx}}\rangle_{\bm{a}} - \langle m_k \psi^{\mathrm{exact}}\rangle_{\bm{a}}\|_\infty = 8.33 \times 10^{-17}$). Table~\ref{tab:latency_benchmark} summarizes the directly measured kernel execution latencies of the three computational methods benchmarked in this study.
 
 \begin{table}[htbp]
 \centering
-\caption{Performance and Latency Benchmark on Tokamak Equilibrium Reconstruction}
+\caption{Computational Performance of the Reduced-Order Moment Flux Kernel}
 \label{tab:latency_benchmark}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lcccc}
+\begin{tabular}{lccc}
 \toprule
-\textbf{Method} & \textbf{Grid Size ($N$)} & \textbf{Algorithm Type} & \textbf{Latency} & \textbf{Max Iterations} \\
+\textbf{Method} & \textbf{Grid Size} & \textbf{Computational Complexity} & \textbf{Kernel Latency} \\
 \midrule
-Full Non-linear EFIT$^\dagger$ & \texttt{65x65} & Iterative Newton-Raphson & $15.40\;\mathrm{ms}$ & $15\text{--}30$ \\
-Real-Time rtEFIT$^\dagger$ & \texttt{33x33} & Linearized Multi-grid & $0.85\;\mathrm{ms}$ & $2\text{--}4$ \\
-GPU-Accelerated P-EFIT$^\dagger$ & \texttt{65x65} & Parallel Matrix Solver & $0.21\;\mathrm{ms}$ & Direct \\
-\textbf{Moment Kernel (This Work)} & \textbf{Offline $10^3\text{--}10^4$} & \texttt{Closed-Form 35x35} & \textbf{0.0043\;ms (4.29\,$\bm{\mu}$s)} & \textbf{None (Deterministic)} \\
+Direct N-Grid Kernel & $N=1{,}000$ & $\mathcal{O}(N^2)$ Pairwise Green-kernel & $280.58\;\mu\mathrm{s}$ \\
+\textbf{Moment Kernel (This Work)} & $N=1{,}000 \to M=35$ & $\mathcal{O}(M^2)$ Matrix-Vector ($35\times35$) & $\mathbf{4.29\;\mu\mathrm{s}}$ \\
+Full LMI Coil Feedback & 6-state & Closed-Form Linear Matrix Operator & $9.72\;\mu\mathrm{s}$ \\
 \bottomrule
-\multicolumn{5}{l}{\footnotesize $^\dagger$Representative latency scales compiled from contemporary tokamak literature for qualitative context; only the Moment Kernel and Direct N-Grid Kernel were measured in this benchmark.}
+\multicolumn{4}{l}{\footnotesize Measured on a single CPU core in NumPy/OpenBLAS; represents reduced-order compute-kernel latency only.}
 \end{tabular}%
 }
 \end{table}
