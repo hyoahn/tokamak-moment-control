@@ -162,7 +162,8 @@ def run_tokamak_benchmark(
     print(f"\n[4] Certified LMI Disruption Mitigation ({spec.simulation_steps} timesteps):")
     print(f"    - Initial VDE Perturbation V(x_0)          : {v_history_cl[0]:.6e} (<= 1.0 RPI Bound)")
     print(f"    - Uncontrolled Open-Loop Final V(x_T)      : {v_history_ol[-1]:.6e} (Disruption!)")
-    print(f"    - Certified LMI Closed-Loop Final V(x_T)   : {v_history_cl[-1]:.6e} (99.6% Damped)")
+    damping_pct = (1.0 - v_history_cl[-1] / v_history_cl[0]) * 100.0
+    print(f"    - Certified LMI Closed-Loop Final V(x_T)   : {v_history_cl[-1]:.6e} ({damping_pct:.1f}% Damped)")
     print(f"    - Strictly Decreasing dV/dt < 0 Guaranteed : {strictly_decreasing}")
     print(f"    - Confinement Inside RPI Ellipsoid (0% Hit): {max_v_cl <= config.ellipsoid_safety_bound}")
     assert max_v_cl <= config.ellipsoid_safety_bound
